@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom';
 import Toggle from './Toggle';
-import userService from '../services/userService';
+import RegisterUser from '../services/userService';
 
 function SignUp() {
 
@@ -29,7 +29,7 @@ function SignUp() {
         e.preventDefault();
 
         try {
-            const response = await userService.registerUser(formData);
+            const response = await RegisterUser(formData);
             console.log(response);
         } catch (error) {
             console.error(error);

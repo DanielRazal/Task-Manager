@@ -22,9 +22,21 @@ function createGenericCrudRouter(Model) {
             const newItem = await item.save();
             res.status(201).json(newItem);
         } catch (err) {
-            res.status(400).json({ message: err.message });
+            if (err.errors) {
+                const errorMessages = [];
+                for (const key in err.errors) {
+                    if (err.errors.hasOwnProperty(key)) {
+                        errorMessages.push(err.errors[key].message);
+                    }
+                }
+                res.status(400).json({ message: errorMessages });
+            } else {
+                res.status(400).json({ message: err.message });
+            }
         }
     }));
+
+
 
     // Deleting All
     router.delete('/', asyncHandler(async (req, res) => {
