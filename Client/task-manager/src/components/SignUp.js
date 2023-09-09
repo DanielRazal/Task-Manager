@@ -1,12 +1,18 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom';
 import Toggle from './Toggle';
-import RegisterUser from '../services/userService';
+import UserService from '../services/userService';
+import CustomNotificationService from '../services/customNotificationService';
+import { useNavigate } from 'react-router-dom';
+import User from '../models/User';
 
 function SignUp() {
 
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+    const [formData, setFormData] = useState(new User('', '')); 
+
+    const navigate = useNavigate();
 
     const togglePasswordVisibility = () => {
         setShowPassword(!showPassword);
@@ -16,23 +22,31 @@ function SignUp() {
         setShowConfirmPassword(!showConfirmPassword);
     };
 
-    const [formData, setFormData] = useState({
-        userName: '',
-        password: '',
-    });
+
 
     const handleChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
+        const { name, value } = e.target;
+        setFormData((prevData) => ({
+            ...prevData,
+            [name]: value,
+        }));
     };
+
+
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
         try {
-            const response = await RegisterUser(formData);
+            const response = await UserService.RegisterUser(formData);
             console.log(response);
+            CustomNotificationService.showSuccessNotification('Account created successfully')
+            navigate('/login');
+
         } catch (error) {
-            console.error(error);
+            if (error.response && error.response.data && error.response.data.message) {
+                CustomNotificationService.showErrorNotificationRegister(error.response.data.message)
+            }
         }
     };
 
@@ -83,6 +97,7 @@ function SignUp() {
                                         <Toggle togglePasswordVisibility={toggleConfirmPasswordVisibility} showPassword={showConfirmPassword} />
                                     </div>
                                 </div> */}
+
                                 <button type="submit" className="w-full text-white bg-black hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-800 dark:hover:bg-primary-700 dark:focus:ring-primary-800">Create an account</button>
                                 <p className="text-sm font-light text-gray-500 dark:text-gray-400">
                                     Already have an account?
