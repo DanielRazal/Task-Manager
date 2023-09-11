@@ -5,6 +5,7 @@ import UserService from '../services/userService';
 import CustomNotificationService from '../services/customNotificationService';
 import User from '../models/User';
 import { useNavigate } from 'react-router-dom';
+import Cookies from 'js-cookie';
 
 function Login() {
 
@@ -34,6 +35,10 @@ function Login() {
             console.log(response.message);
             if (response && response.message) {
                 CustomNotificationService.showSuccessNotification(response.message);
+                Cookies.set('User', JSON.stringify(response), { expires: 7 }); // 7 days
+                console.log(response.user);
+                console.log(response.token);
+
                 navigate('/todo');
             }
 

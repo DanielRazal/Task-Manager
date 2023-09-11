@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const asyncHandler = require("../helpers/asyncHandler");
-
+const jwtToken = require('../jwtToken/token');
 
 function createGenericCrudRouter(Model) {
 
@@ -20,11 +20,12 @@ function createGenericCrudRouter(Model) {
         const item = new Model(req.body);
         const items = await Model.find();
         const user = items.find(u => u.userName === item.userName && u.password === item.password);
+        const token = jwtToken(user);
         try {
             if (!user) {
                 return res.status(404).json({ message: 'User not found' });
             }
-            else return res.status(200).json({ message: 'Login successful' });
+            else return res.status(200).json({ message: 'Login successful', token, user });
 
         } catch (err) {
             console.error(err);

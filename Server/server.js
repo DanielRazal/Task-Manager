@@ -16,8 +16,11 @@ db.once('open', () => console.log('Connected to Database'));
 
 app.use(express.json());
 
-const User = require('./models/user')
+const User = require('./models/user');
+const List = require('./models/list');
 const userRouter = createGenericCrudRouter(User);
+const listRouter = createGenericCrudRouter(List);
+app.use('/List', listRouter);
 app.use('/User', userRouter);
 
 app.listen(Urls.serverPort, () =>
