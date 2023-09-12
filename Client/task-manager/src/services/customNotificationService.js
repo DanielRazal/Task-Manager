@@ -39,7 +39,7 @@ const showErrorNotificationRegister = (errorMessage) => {
 };
 
 
-const showErrorNotificationLogin = (errorMessage) => {
+const showErrorNotification = (errorMessage) => {
     toast.error(
         <div>
             <p className='text-red-500 font-bold'>Registration failed:</p>
@@ -56,7 +56,7 @@ const showErrorNotificationLogin = (errorMessage) => {
 const CustomNotificationService = {
     showSuccessNotification,
     showErrorNotificationRegister,
-    showErrorNotificationLogin
+    showErrorNotification
 };
 
 export default CustomNotificationService;

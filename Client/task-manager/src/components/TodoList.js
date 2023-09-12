@@ -3,18 +3,18 @@ import Cookies from 'js-cookie';
 import { useNavigate } from 'react-router-dom';
 import swalService from '../services/swalService';
 import List from '../models/List';
+import ListService from '../services/listService';
+import CustomNotificationService from '../services/customNotificationService';
 
 function TodoList() {
     const navigate = useNavigate();
     useEffect(() => {
         const userCookie = Cookies.get('User');
-        console.log(userCookie);
         if (!userCookie) {
             navigate('/login');
         } else {
             const userObj = JSON.parse(userCookie);
             const userId = userObj.userLogin._id;
-            console.log(userId);
             const initialFormData = new List('', userId);
             setFormData(initialFormData);
         }
@@ -25,12 +25,24 @@ function TodoList() {
     const handleNewListClick = () => {
         swalService.AddNewItemAlert("Enter a New List", "Please provide a Name to the List.")
             .then((result) => {
-                console.log('Result from AddNewItemAlert:', result);
+                if (result.isConfirmed && result.value) {
+                    const list = result.value;
+                    ListService.AddNewList({ name: list, user: formData.user })
+                        .then((response) => {
+                            CustomNotificationService.showSuccessNotification(response.message)
+                        })
+                        .catch((error) => {
+                            if (error.response && error.response.data && error.response.data.message) {
+                                CustomNotificationService.showErrorNotification(error.response.data.message)
+                            }
+                        });
+                }
             })
             .catch((error) => {
                 console.error('Error or cancellation:', error);
             });
     };
+
 
 
     return (
@@ -40,12 +52,12 @@ function TodoList() {
                 <button
                     type="button"
                     className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 
-            font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600
-            dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800 ml-12 mt-80"
+                     font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600
+                    dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800 ml-12 mt-80"
                     onClick={handleNewListClick}>New List</button>
             </div>
         </div>
     );
-}
 
+}
 export default TodoList;

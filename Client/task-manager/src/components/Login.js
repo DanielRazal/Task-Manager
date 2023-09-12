@@ -44,7 +44,7 @@ function Login() {
 
         } catch (error) {
             if (error.response && error.response.data && error.response.data.message) {
-                CustomNotificationService.showErrorNotificationLogin(error.response.data.message)
+                CustomNotificationService.showErrorNotification(error.response.data.message)
             }
         }
     };

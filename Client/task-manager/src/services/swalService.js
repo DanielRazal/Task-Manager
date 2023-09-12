@@ -1,30 +1,20 @@
 import Swal from 'sweetalert2';
 
-const AddNewItemAlert = async (title, err) => {
-    return new Promise((resolve, reject) => {
-        Swal.fire({
-            title: title,
-            input: 'text',
-            showCancelButton: true,
-            confirmButtonText: 'Submit',
-            cancelButtonText: 'Cancel',
-            inputValidator: (value) => {
-                if (!value) {
-                    return err;
-                }
-                return null;
+const AddNewItemAlert = (title, err) => {
+    return Swal.fire({
+        title: title,
+        input: 'text',
+        showCancelButton: true,
+        confirmButtonText: 'Submit',
+        cancelButtonText: 'Cancel',
+        inputValidator: (value) => {
+            if (!value) {
+                return err;
             }
-        })
-            .then((result) => {
-                if (result.isConfirmed) {
-                    resolve(result.value);
-                } else {
-                    reject('Action canceled');
-                }
-            });
+            return null;
+        },
     });
-}
-
+};
 
 const swalService = {
     AddNewItemAlert,
