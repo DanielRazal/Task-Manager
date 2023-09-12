@@ -13,18 +13,17 @@ router.get('/', asyncHandler(async (req, res) => {
     }
 }));
 
-// Getting all by id
-router.get('/:id', asyncHandler(async (req, res) => {
+// Getting all lists by userId
+router.get('/ByUser/:id', async (req, res) => {
     try {
-        const list = await List.findById(req.params.id).populate('user');
-        if (!list) {
-            return res.status(404).json({ message: `Cannot find ${List.modelName} with id ${req.params.id}` });
-        }
-        res.json(list);
+        const userId = req.params.id;
+        const lists = await List.find({ user: userId });
+
+        res.json(lists);
     } catch (err) {
         res.status(500).json({ message: err.message });
     }
-}));
+});
 
 
 // Creating one
