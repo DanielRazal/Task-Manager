@@ -3,7 +3,8 @@ const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
 const Urls = require("./settings/staticUrls");
-const createGenericCrudRouter = require('./routes/genericCrudRouter');
+const UserRoutes = require('./routes/userRoutes');
+const ListRoutes = require('./routes/listRoutes');
 const cors = require("cors");
 
 mongoose.connect(process.env.DATABASE_URL, { useNewUrlParser: true });
@@ -16,12 +17,8 @@ db.once('open', () => console.log('Connected to Database'));
 
 app.use(express.json());
 
-const User = require('./models/user');
-const List = require('./models/list');
-const userRouter = createGenericCrudRouter(User);
-const listRouter = createGenericCrudRouter(List);
-app.use('/List', listRouter);
-app.use('/User', userRouter);
+app.use('/User', UserRoutes);
+app.use('/List', ListRoutes);
 
 app.listen(Urls.serverPort, () =>
     console.log(

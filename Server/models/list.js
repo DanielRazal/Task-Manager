@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const ListSchema = new mongoose.Schema({
+const listSchema = new mongoose.Schema({
     name: {
         type: String,
         required: [true, 'Please provide a Name to the List.'],
@@ -8,6 +8,13 @@ const ListSchema = new mongoose.Schema({
         maxlength: [50, 'List Name cannot exceed 50 characters.'],
         trim: true,
     },
+    user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true,
+    },
 });
 
-module.exports = mongoose.model('List', ListSchema);
+const List = mongoose.model('List', listSchema);
+
+module.exports = List;
