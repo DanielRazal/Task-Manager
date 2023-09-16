@@ -18,7 +18,16 @@ const AddNewList = async (listData) => {
 const GetAllListsByUser = async (id) => {
     try {
         const response = await axios.get(URL + LISTS_BY_USER_URL + id);
-        console.log(response);
+        return response.data;
+    } catch (error) {
+        throw error;
+    }
+};
+
+
+const DeleteList = async (id) => {
+    try {
+        const response = await axios.delete(URL + '/' + id);
         return response.data;
     } catch (error) {
         throw error;
@@ -28,7 +37,8 @@ const GetAllListsByUser = async (id) => {
 
 const ListService = {
     AddNewList,
-    GetAllListsByUser
+    GetAllListsByUser,
+    DeleteList
 };
 
 export default ListService;
