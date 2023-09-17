@@ -6,17 +6,17 @@ const Urls = require("./settings/staticUrls");
 const UserRoutes = require('./routes/userRoutes');
 const ListRoutes = require('./routes/listRoutes');
 const cors = require("cors");
+const bodyParser = require("body-parser");
 
 mongoose.connect(process.env.DATABASE_URL, { useNewUrlParser: true });
 
-app.use(cors());
 
 const db = mongoose.connection;
 db.on('error', (error) => console.error(error));
 db.once('open', () => console.log('Connected to Database'));
 
+app.use(cors());
 app.use(express.json());
-
 app.use('/User', UserRoutes);
 app.use('/List', ListRoutes);
 

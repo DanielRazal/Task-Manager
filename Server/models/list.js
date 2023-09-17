@@ -5,7 +5,7 @@ const listSchema = new mongoose.Schema({
         type: String,
         required: [true, 'Please provide a Name to the List.'],
         minlength: [3, 'List Name must be at least 3 characters.'],
-        maxlength: [50, 'List Name cannot exceed 50 characters.'],
+        maxlength: [30, 'List Name cannot exceed 30 characters.'],
         trim: true,
     },
     user: {

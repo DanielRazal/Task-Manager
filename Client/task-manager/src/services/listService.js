@@ -34,11 +34,21 @@ const DeleteList = async (id) => {
     }
 };
 
+const UpdateList = async (id, listData) => {
+    try {
+        const response = await axios.patch(URL + '/' + id, listData);
+        return response.data;
+    } catch (error) {
+        throw error;
+    }
+};
+
 
 const ListService = {
     AddNewList,
     GetAllListsByUser,
-    DeleteList
+    DeleteList,
+    UpdateList
 };
 
 export default ListService;

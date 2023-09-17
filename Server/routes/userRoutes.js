@@ -3,6 +3,7 @@ const router = express.Router();
 const asyncHandler = require("../helpers/asyncHandler");
 const jwtToken = require('../jwtToken/token');
 const User = require('../models/user');
+const handleErrors = require("../errors/handleErrors");
 
 // Getting all
 router.get('/', asyncHandler(async (req, res) => {
@@ -14,7 +15,7 @@ router.get('/', asyncHandler(async (req, res) => {
     }
 }));
 
-// // Login route
+// Login route
 router.post('/Login', async (req, res) => {
     const user = new User(req.body);
     const users = await User.find();
@@ -32,7 +33,7 @@ router.post('/Login', async (req, res) => {
     }
 });
 
-// // Register route
+// Register route
 router.post('/Register', asyncHandler(async (req, res) => {
 
     const { userName, password } = req.body;
@@ -50,21 +51,11 @@ router.post('/Register', asyncHandler(async (req, res) => {
         res.status(201).json(savedUser);
 
     } catch (err) {
-        if (err.errors) {
-            const errorMessages = [];
-            for (const key in err.errors) {
-                if (err.errors.hasOwnProperty(key)) {
-                    errorMessages.push(err.errors[key].message);
-                }
-            }
-            res.status(400).json({ message: errorMessages });
-        } else {
-            res.status(400).json({ message: err.message });
-        }
+        handleErrors(err, res);
     }
 }));
 
-// // Deleting All
+// Deleting All
 router.delete('/', asyncHandler(async (req, res) => {
     try {
         await User.deleteMany({});
@@ -87,7 +78,7 @@ router.get('/:id', asyncHandler(async (req, res) => {
     }
 }));
 
-// // Deleting One
+// Deleting One
 router.delete('/:id', asyncHandler(async (req, res) => {
     try {
         const deletedUser = await User.findByIdAndRemove(req.params.id);
@@ -100,7 +91,7 @@ router.delete('/:id', asyncHandler(async (req, res) => {
     }
 }));
 
-// // Updating One
+// Updating One
 router.patch('/:id', asyncHandler(async (req, res) => {
     try {
         const user = await User.findById(req.params.id);

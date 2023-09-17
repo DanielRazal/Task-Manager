@@ -1,6 +1,6 @@
 import Swal from 'sweetalert2';
 
-const AddNewItemAlert = (title, err) => {
+const InputItemAlert = (title, err) => {
     return Swal.fire({
         title: title,
         input: 'text',
@@ -17,7 +17,7 @@ const AddNewItemAlert = (title, err) => {
 };
 
 const swalService = {
-    AddNewItemAlert,
+    InputItemAlert,
 };
 
 export default swalService;

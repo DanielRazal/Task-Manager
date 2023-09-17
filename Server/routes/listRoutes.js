@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const asyncHandler = require("../helpers/asyncHandler");
 const List = require('../models/list');
+const handleErrors = require("../errors/handleErrors");
 
 // Getting all
 router.get('/', asyncHandler(async (req, res) => {
@@ -33,17 +34,7 @@ router.post('/', asyncHandler(async (req, res) => {
         const newList = await list.save();
         res.status(201).json({ newList, message: "The list has been successfully added" });
     } catch (err) {
-        if (err.errors) {
-            const errorMessages = [];
-            for (const key in err.errors) {
-                if (err.errors.hasOwnProperty(key)) {
-                    errorMessages.push(err.errors[key].message);
-                }
-            }
-            res.status(400).json({ message: errorMessages });
-        } else {
-            res.status(400).json({ message: err.message });
-        }
+        handleErrors(err, res);
     }
 }));
 
@@ -78,8 +69,10 @@ router.delete('/:id', asyncHandler(async (req, res) => {
         if (!deletedList) {
             return res.status(404).json({ message: `Cannot find ${List.modelName} with id ${req.params.id}` });
         }
-        res.json({ message: `Deleted ${List.modelName} with id ${req.params.id}` });
+        const itemName = deletedList.name;
+        res.json({ message: `Deleted ${List.modelName} with name ${itemName}` });
     } catch (err) {
+        ``
         res.status(500).json({ message: err.message });
     }
 }));
@@ -93,9 +86,9 @@ router.patch('/:id', asyncHandler(async (req, res) => {
         }
         Object.assign(list, req.body);
         const updatedList = await list.save();
-        res.json(updatedList);
+        res.json({ updatedList, message: "The list has been successfully updated" });
     } catch (err) {
-        res.status(400).json({ message: err.message });
+        handleErrors(err, res);
     }
 }));
 
