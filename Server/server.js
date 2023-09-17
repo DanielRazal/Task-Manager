@@ -6,7 +6,8 @@ const Urls = require("./settings/staticUrls");
 const UserRoutes = require('./routes/userRoutes');
 const ListRoutes = require('./routes/listRoutes');
 const cors = require("cors");
-const bodyParser = require("body-parser");
+const TaskRoutes = require('./routes/taskRoutes');
+
 
 mongoose.connect(process.env.DATABASE_URL, { useNewUrlParser: true });
 
@@ -19,6 +20,7 @@ app.use(cors());
 app.use(express.json());
 app.use('/User', UserRoutes);
 app.use('/List', ListRoutes);
+app.use('/Task', TaskRoutes);
 
 app.listen(Urls.serverPort, () =>
     console.log(

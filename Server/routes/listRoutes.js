@@ -32,7 +32,7 @@ router.post('/', asyncHandler(async (req, res) => {
     const list = new List(req.body);
     try {
         const newList = await list.save();
-        res.status(201).json({ newList, message: "The list has been successfully added" });
+        res.status(201).json({ newList, message: `The ${List.modelName} has been successfully added` });
     } catch (err) {
         handleErrors(err, res);
     }
