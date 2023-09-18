@@ -25,9 +25,19 @@ const LoginUser = async (userData) => {
     }
 };
 
+const DeleteUser = async (id) => {
+    try {
+        const response = await axios.delete(URL + '/' + id);
+        return response.data;
+    } catch (error) {
+        throw error;
+    }
+}
+
 const UserService = {
     RegisterUser,
-    LoginUser
+    LoginUser,
+    DeleteUser
 };
 
 export default UserService;

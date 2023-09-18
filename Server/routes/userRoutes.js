@@ -4,6 +4,8 @@ const asyncHandler = require("../helpers/asyncHandler");
 const jwtToken = require('../jwtToken/token');
 const User = require('../models/user');
 const handleErrors = require("../errors/handleErrors");
+const List = require("../models/list");
+const Task = require('../models/task');
 
 // Getting all
 router.get('/', asyncHandler(async (req, res) => {
@@ -20,12 +22,15 @@ router.post('/Login', async (req, res) => {
     const user = new User(req.body);
     const users = await User.find();
     const userLogin = users.find(u => u.userName === user.userName && u.password === user.password);
-    const token = jwtToken(userLogin);
     try {
         if (!userLogin) {
             return res.status(404).json({ message: 'User not found' });
         }
-        else return res.status(200).json({ message: 'Login successful', token, userLogin });
+        else {
+            const token = jwtToken(userLogin);
+            return res.status(200).json({ message: 'Login successful', token, userLogin });
+        }
+
 
     } catch (err) {
         console.error(err);
@@ -79,17 +84,43 @@ router.get('/:id', asyncHandler(async (req, res) => {
 }));
 
 // Deleting One
+// router.delete('/:id', asyncHandler(async (req, res) => {
+//     try {
+//         const deletedUser = await User.findByIdAndRemove(req.params.id);
+//         if (!deletedUser) {
+//             return res.status(404).json({ message: `Cannot find ${User.modelName} with id ${req.params.id}` });
+//         }
+//         res.json({ message: `Deleted ${User.modelName} with id ${req.params.id}` });
+//     } catch (err) {
+//         res.status(500).json({ message: err.message });
+//     }
+// }));
+
+
 router.delete('/:id', asyncHandler(async (req, res) => {
     try {
-        const deletedUser = await User.findByIdAndRemove(req.params.id);
+        const deletedUser = await User.findById(req.params.id);
         if (!deletedUser) {
             return res.status(404).json({ message: `Cannot find ${User.modelName} with id ${req.params.id}` });
         }
+
+        const userLists = await List.find({ user: req.params.id });
+
+        for (const list of userLists) {
+            await Task.deleteMany({ list: list._id });
+        }
+
+        await List.deleteMany({ user: req.params.id });
+
+        await User.findByIdAndRemove(req.params.id);
+
         res.json({ message: `Deleted ${User.modelName} with id ${req.params.id}` });
     } catch (err) {
         res.status(500).json({ message: err.message });
     }
 }));
+
+
 
 // Updating One
 router.patch('/:id', asyncHandler(async (req, res) => {

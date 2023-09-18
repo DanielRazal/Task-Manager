@@ -1,7 +1,7 @@
 import Swal from 'sweetalert2';
 
-const InputItemAlert = (title, err) => {
-    return Swal.fire({
+const InputItemAlert = async (title, err) => {
+    return await Swal.fire({
         title: title,
         input: 'text',
         showCancelButton: true,
@@ -16,8 +16,22 @@ const InputItemAlert = (title, err) => {
     });
 };
 
+const IsDeleteAlert = async () => {
+    const result = await Swal.fire({
+        title: 'Delete User',
+        html: 'Are you sure to delete the user?',
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: 'Delete',
+        cancelButtonText: 'Cancel',
+    });
+
+    return result;
+};
+
 const swalService = {
     InputItemAlert,
+    IsDeleteAlert
 };
 
 export default swalService;

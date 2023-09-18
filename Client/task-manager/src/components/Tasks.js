@@ -5,6 +5,7 @@ import Cookies from 'js-cookie';
 import CustomNotificationService from '../services/customNotificationService';
 import { IoAddSharp } from 'react-icons/io5';
 import Task from '../models/Task';
+import Settings from './Settings';
 
 
 function Tasks() {
@@ -38,7 +39,12 @@ function Tasks() {
 
     return (
         <div className="bg-white p-4 shadow-lg h-120 w-180 relative">
-            <h1 className='text-4xl text-blue-800 ml-10 underline'>Tasks</h1>
+            <div className="flex items-center">
+                <h1 className="text-4xl text-blue-800 ml-10 underline">Tasks</h1>
+                <div className="ml-auto">
+                    <Settings />
+                </div>
+            </div>
             {tasks.length === 0 ? (
                 <p className='text-lg mt-5'>There are no tasks here! Click the add button to create a new task</p>
             ) : (
