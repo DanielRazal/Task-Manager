@@ -6,7 +6,7 @@ import CustomNotificationService from '../services/customNotificationService';
 import { FiSettings } from 'react-icons/fi';
 import swalService from '../services/swalService';
 
-function Settings() {
+function SettingsUser() {
 
     const [isOpen, setIsOpen] = useState(false);
 
@@ -82,4 +82,4 @@ function Settings() {
     );
 }
 
-export default Settings;
+export default SettingsUser;

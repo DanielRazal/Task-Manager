@@ -5,7 +5,8 @@ import Cookies from 'js-cookie';
 import CustomNotificationService from '../services/customNotificationService';
 import { IoAddSharp } from 'react-icons/io5';
 import Task from '../models/Task';
-import Settings from './Settings';
+import SettingsUser from './SettingsUser';
+import SettingsList from './SettingsList';
 
 
 function Tasks() {
@@ -41,29 +42,32 @@ function Tasks() {
         <div className="bg-white p-4 shadow-lg h-120 w-180 relative">
             <div className="flex items-center">
                 <h1 className="text-4xl text-blue-800 ml-10 underline">Tasks</h1>
-                <div className="ml-auto">
-                    <Settings />
+                <div className="ml-auto flex space-x-4">
+                    <SettingsList />
+                    <SettingsUser />
                 </div>
             </div>
-            {tasks.length === 0 ? (
-                <p className='text-lg mt-5'>There are no tasks here! Click the add button to create a new task</p>
-            ) : (
-                <ul>
-                    {tasks.map((task) => (
-                        <li className='mt-5 text-sm' key={task._id}>
-                            <div className="bg-sky-300 text-white font-bold rounded-lg shadow-md p-3">
-                                <span className="whitespace-normal">{task.name}</span>
-                            </div>
-                        </li>
-                    ))}
-                </ul>
-            )}
+            {
+                tasks.length === 0 ? (
+                    <p className='text-lg mt-5'>There are no tasks here! Click the add button to create a new task</p>
+                ) : (
+                    <ul>
+                        {tasks.map((task) => (
+                            <li className='mt-5 text-sm' key={task._id}>
+                                <div className="bg-sky-300 text-white font-bold rounded-lg shadow-md p-3">
+                                    <span className="whitespace-normal">{task.name}</span>
+                                </div>
+                            </li>
+                        ))}
+                    </ul>
+                )
+            }
             <button
                 className="bg-blue-500 w-11 h-11 rounded-full flex items-center justify-center
 text-white absolute bottom-4 right-4" onClick={handleNewTaskClick}>
                 <IoAddSharp size={30} />
             </button>
-        </div>
+        </div >
     );
 }
 

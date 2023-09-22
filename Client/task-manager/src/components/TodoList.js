@@ -11,6 +11,7 @@ import TaskService from '../services/taskService';
 import { IoAddSharp } from 'react-icons/io5';
 import Task from '../models/Task';
 import Tasks from './Tasks';
+import Lists from './Lists';
 
 function TodoList() {
     const navigate = useNavigate();
@@ -148,66 +149,10 @@ function TodoList() {
 
     return (
         <div className="min-h-screen flex items-center justify-center">
-            <div className="bg-white p-4 shadow-lg h-120 w-60">
-                <h1 className='text-4xl text-blue-800 ml-16 underline'>Lists</h1>
-                <div className="mt-5 overflow-y-auto h-80 overflow-x-auto">
-                    <ul>
-                        {lists.map((list) => (
-                            <li className='mt-5 text-sm' key={list._id}>
-                                <div className="bg-sky-300 text-white font-bold rounded-lg shadow-md p-3">
-                                    <button
-                                        className="whitespace-normal focus:outline-none"
-                                        onClick={() => handleListClick(list._id)}
-                                    >
-                                        {list.name}
-                                    </button>
-                                </div>
-                            </li>
-                        ))}
-                    </ul>
-                </div>
-                {/* <div>
-                            <button onClick={() => handleUpdateListClick(list._id)}>
-                                <GrEdit />
-                            </button>
-                            <button onClick={() => handleDeleteList(list._id)}>
-                                <RiDeleteBin6Line color="black" />
-                            </button>
-                        </div> */}
-                <div className="flex justify-center">
-                    <button
-                        type="button"
-                        className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4
-                         focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 mt-3
-                        dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
-                        onClick={handleNewListClick}>
-                        New List
-                    </button>
-                </div>
-            </div>
-            {/* <div className="bg-white p-4 shadow-lg h-120 w-180 relative">
-                <h1 className='text-4xl text-blue-800 ml-10 underline'>Tasks</h1>
-                {tasks.length === 0 ? (
-                    <p className='text-lg mt-5'>There are no tasks here! Click the add button to create a new task</p>
-                ) : (
-                    <ul>
-                        {tasks.map((task) => (
-                            <li className='mt-5 text-sm' key={task._id}>
-                                <div className="bg-sky-300 text-white font-bold rounded-lg shadow-md p-3">
-                                    <span className="whitespace-normal">{task.name}</span>
-                                </div>
-                            </li>
-                        ))}
-                    </ul>
-                )}
-                <button
-                    className="bg-blue-500 w-11 h-11 rounded-full flex items-center justify-center
-        text-white absolute bottom-4 right-4" onClick={handleNewTaskClick}>
-                    <IoAddSharp size={30} />
-                </button>
-            </div> */}
+            <Lists />
             <Tasks />
-        </div >
+        </div>
     );
 }
 export default TodoList;
+
