@@ -43,7 +43,7 @@ function Tasks() {
             <div className="flex items-center">
                 <h1 className="text-4xl text-blue-800 ml-10 underline">Tasks</h1>
                 <div className="ml-auto flex space-x-4">
-                    <SettingsList />
+                    {/* <SettingsList /> */}
                     <SettingsUser />
                 </div>
             </div>
