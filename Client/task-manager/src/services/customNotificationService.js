@@ -39,17 +39,12 @@ const showErrorNotificationRegister = (errorMessage) => {
 };
 
 
-const showErrorNotification = (errorMessage) => {
-    toast.error(
-        <div>
-            <p className='text-red-500 font-bold'>Registration failed:</p>
-            <p className='font-bold text-black text-xs'>{errorMessage}</p>
-        </div>,
-        {
-            position: 'top-right',
-            autoClose: 5000,
-        }
-    );
+const showErrorNotification = async (errorMessage) => {
+    toast.error(errorMessage, {
+        position: 'top-right',
+        autoClose: 3000,
+        className: 'font-bold',
+    });
 };
 
 

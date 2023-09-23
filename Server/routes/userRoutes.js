@@ -84,19 +84,6 @@ router.get('/:id', asyncHandler(async (req, res) => {
 }));
 
 // Deleting One
-// router.delete('/:id', asyncHandler(async (req, res) => {
-//     try {
-//         const deletedUser = await User.findByIdAndRemove(req.params.id);
-//         if (!deletedUser) {
-//             return res.status(404).json({ message: `Cannot find ${User.modelName} with id ${req.params.id}` });
-//         }
-//         res.json({ message: `Deleted ${User.modelName} with id ${req.params.id}` });
-//     } catch (err) {
-//         res.status(500).json({ message: err.message });
-//     }
-// }));
-
-
 router.delete('/:id', asyncHandler(async (req, res) => {
     try {
         const deletedUser = await User.findById(req.params.id);

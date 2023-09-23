@@ -1,34 +1,104 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import swalService from '../services/swalService';
 import TaskService from '../services/taskService';
-import Cookies from 'js-cookie';
 import CustomNotificationService from '../services/customNotificationService';
 import { IoAddSharp } from 'react-icons/io5';
-import Task from '../models/Task';
 import SettingsUser from './SettingsUser';
-import SettingsList from './SettingsList';
+import Cookies from 'js-cookie';
+import { MdOutlineDeleteOutline } from 'react-icons/md';
+import { AiOutlineEdit } from 'react-icons/ai';
 
 
-function Tasks() {
+function Tasks({ listIdCookie }) {
     const [tasks, setTasks] = useState([]);
-    const listIdCookie = Cookies.get('ListId');
-    const [formTaskData, setFormTaskData] = useState(new Task('', false, listIdCookie));
+
+    useEffect(() => {
+        if (listIdCookie) {
+            handleListClick(listIdCookie);
+        } else {
+            setTasks([]);
+        }
+    }, [listIdCookie]);
+
+
+    const handleListClick = async (id) => {
+        try {
+            const tasks = await TaskService.GetAllTasksByList(id);
+            setTasks(tasks);
+
+        } catch (error) {
+            console.error('Error fetching tasks:', error);
+        }
+    };
 
     const handleNewTaskClick = () => {
-        swalService.InputItemAlert("Enter a New Task", "Please provide a Name to the Task.")
+        if (listIdCookie) {
+            swalService.InputItemAlert("Enter a New Task", "Please provide a Name to the Task.")
+                .then((result) => {
+                    if (result.isConfirmed && result.value) {
+                        const task = result.value;
+                        TaskService.AddNewTask({ name: task, list: listIdCookie })
+                            .then((response) => {
+                                CustomNotificationService.showSuccessNotification(response.message);
+                                setTasks((prevTasks) => [...prevTasks, response.newTask]);
+                            })
+                            .catch((error) => {
+                                if (error.response && error.response.data && error.response.data.message) {
+                                    CustomNotificationService.showErrorNotification(error.response.data.message);
+                                }
+                            });
+                    }
+                })
+                .catch((error) => {
+                    console.error('Error or cancellation:', error);
+                });
+        }
+        else {
+            CustomNotificationService.showErrorNotification("Please select a valid list before performing actions.")
+        }
+    };
+
+
+    const handleDeleteTaskClick = async (id) => {
+        try {
+            await TaskService.DeleteTask(id).then((response) => {
+                CustomNotificationService.showSuccessNotification(response.message);
+                setTasks((prevLists) => prevLists.filter((task) => task._id !== id));
+                // Cookies.remove('ListId');
+            });
+        } catch (error) {
+            if (error.response && error.response.data && error.response.data.message) {
+                CustomNotificationService.showErrorNotification(error.response.data.message)
+                console.error('Error deleting list:', error);
+            }
+        }
+    };
+
+    const handleUpdateTaskClick = (id) => {
+        swalService.InputItemAlert("Enter a task you want to update", "Please provide a Name to the Task.")
             .then((result) => {
                 if (result.isConfirmed && result.value) {
-                    const task = result.value;
-                    TaskService.AddNewTask({ name: task, list: formTaskData.list })
-                        .then((response) => {
-                            CustomNotificationService.showSuccessNotification(response.message);
-                            setTasks((prevTasks) => [...prevTasks, response.newTask]);
-                        })
-                        .catch((error) => {
-                            if (error.response && error.response.data && error.response.data.message) {
-                                CustomNotificationService.showErrorNotification(error.response.data.message);
-                            }
-                        });
+                    const taskName = result.value;
+
+                    const taskIndex = tasks.findIndex((task) => task._id === id);
+
+                    if (taskIndex !== -1) {
+                        const updatedtasks = [...tasks];
+
+                        updatedtasks[taskIndex].name = taskName;
+
+                        TaskService.UpdateTask(id, { name: taskName })
+                            .then((response) => {
+                                CustomNotificationService.showSuccessNotification(response.message);
+
+                                setTasks(updatedtasks);
+                            })
+                            .catch((error) => {
+                                if (error.response && error.response.data && error.response.data.message) {
+                                    CustomNotificationService.showErrorNotification(error.response.data.message);
+                                }
+                            });
+                    }
                 }
             })
             .catch((error) => {
@@ -38,12 +108,28 @@ function Tasks() {
 
 
 
+    const toggleTaskCompletion = async (index) => {
+        try {
+            const updatedTask = { ...tasks[index], isDone: !tasks[index].isDone };
+            const response = await TaskService.UpdateTask(updatedTask._id, updatedTask);
+            Cookies.set('IsDone', updatedTask.isDone, { expires: 7 }); // 7 days
+
+
+            // setTasks((prevTasks) => {
+            //     const updatedTasks = [...prevTasks];
+            //     updatedTasks[index] = response;
+            //     return updatedTasks;
+            // });
+        } catch (error) {
+            console.error('Error toggling task completion:', error);
+        }
+    };
+
     return (
         <div className="bg-white p-4 shadow-lg h-120 w-180 relative">
             <div className="flex items-center">
                 <h1 className="text-4xl text-blue-800 ml-10 underline">Tasks</h1>
                 <div className="ml-auto flex space-x-4">
-                    {/* <SettingsList /> */}
                     <SettingsUser />
                 </div>
             </div>
@@ -51,15 +137,32 @@ function Tasks() {
                 tasks.length === 0 ? (
                     <p className='text-lg mt-5'>There are no tasks here! Click the add button to create a new task</p>
                 ) : (
-                    <ul>
-                        {tasks.map((task) => (
-                            <li className='mt-5 text-sm' key={task._id}>
-                                <div className="bg-sky-300 text-white font-bold rounded-lg shadow-md p-3">
-                                    <span className="whitespace-normal">{task.name}</span>
-                                </div>
-                            </li>
-                        ))}
-                    </ul>
+                    <div className="mt-5 overflow-y-auto h-80 overflow-x-auto">
+                        <ul>
+                            {tasks.map((task, index) => (
+                                <li className='mt-5 text-sm relative' key={task._id}>
+                                    <button className="bg-sky-300 text-white font-bold rounded-lg shadow-md p-3 w-full text-left"
+                                        onClick={() => toggleTaskCompletion(index)}
+                                    >
+                                        {task.name}
+                                    </button>
+                                    <div className="absolute right-3 top-0 bottom-0 flex items-center">
+                                        <button
+                                            className="bg-white w-8 h-8 flex items-center justify-center border border-black mr-2"
+                                            onClick={() => handleDeleteTaskClick(task._id)}
+                                        >
+                                            <MdOutlineDeleteOutline size={25} />
+                                        </button>
+                                        <button onClick={() => handleUpdateTaskClick(task._id)}
+                                            className="bg-white w-8 h-8 flex items-center justify-center border border-black"
+                                        >
+                                            <AiOutlineEdit size={25} />
+                                        </button>
+                                    </div>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
                 )
             }
             <button

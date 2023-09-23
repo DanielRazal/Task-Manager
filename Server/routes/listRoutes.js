@@ -3,6 +3,7 @@ const router = express.Router();
 const asyncHandler = require("../helpers/asyncHandler");
 const List = require('../models/list');
 const handleErrors = require("../errors/handleErrors");
+const Task = require("../models/task");
 
 // Getting all
 router.get('/', asyncHandler(async (req, res) => {
@@ -65,14 +66,14 @@ router.get('/:id', asyncHandler(async (req, res) => {
 // Deleting One
 router.delete('/:id', asyncHandler(async (req, res) => {
     try {
+        await Task.deleteMany({ list: req.params.id });
         const deletedList = await List.findByIdAndRemove(req.params.id);
         if (!deletedList) {
             return res.status(404).json({ message: `Cannot find ${List.modelName} with id ${req.params.id}` });
         }
         const itemName = deletedList.name;
-        res.json({ message: `Deleted ${List.modelName} with name ${itemName}` });
+        res.json({ message: `Deleted ${List.modelName} with name ${itemName} and its tasks` });
     } catch (err) {
-        ``
         res.status(500).json({ message: err.message });
     }
 }));

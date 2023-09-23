@@ -36,9 +36,6 @@ function Login() {
             if (response && response.message) {
                 CustomNotificationService.showSuccessNotification(response.message);
                 Cookies.set('User', JSON.stringify(response), { expires: 7 }); // 7 days
-                console.log(response.user);
-                console.log(response.token);
-
                 navigate('/todo');
             }
 

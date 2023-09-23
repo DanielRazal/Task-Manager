@@ -87,8 +87,10 @@ router.get('/ByList/:id', async (req, res) => {
 
         res.json(tasks);
     } catch (err) {
-        res.status(500).json({ message: err.message });
+        console.error('Error fetching tasks:', err);
+        res.status(500).json({ message: 'Internal Server Error' });
     }
 });
+
 
 module.exports = router;
