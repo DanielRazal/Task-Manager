@@ -53,7 +53,7 @@ function SettingsUser() {
     };
 
     return (
-        <div className="relative">
+        <div className="relative z-10">
             <button
                 className="bg-white w-8 h-8 flex items-center justify-center border border-black"
                 onClick={toggleMenu}

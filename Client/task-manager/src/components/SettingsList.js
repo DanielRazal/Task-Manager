@@ -37,7 +37,7 @@ function SettingsList({ handleDeleteListClick, handleUpdateListClick }) {
                         className="w-full text-left px-4 py-2 hover:bg-gray-100 flex items-center justify-start"
                         onClick={onUpdateClick}
                     >
-                        <span className="mr-2">Edit</span>
+                        <span className="mr-2 text-orange-500">Edit</span>
                     </button>
                     <button
                         className="w-full text-left px-4 py-2 hover:bg-gray-100 flex items-center justify-start"

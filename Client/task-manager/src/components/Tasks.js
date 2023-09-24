@@ -137,12 +137,12 @@ function Tasks({ listIdCookie }) {
             </div>
             {
                 tasks.length === 0 ? (
-                    <p className='text-lg mt-5'>There are no tasks here! Click the add button to create a new task</p>
+                    <p className='text-lg mt-5 no-lists'>There are no tasks here! Click the add button to create a new task</p>
                 ) : (
                     <div className="mt-5 overflow-y-auto h-80 overflow-x-auto">
                         <ul>
                             {tasks.map((task, index) => (
-                                <li className='mt-5 text-sm relative' key={task._id}>
+                                <li className='mt-5 text-sm relative group' key={task._id}>
                                     <button
                                         className={`bg-sky-300 text-black rounded-lg shadow-md p-3 w-full text-left ${task.isDone ? 'line-through' : 'no-underline'
                                             }`}
@@ -150,9 +150,10 @@ function Tasks({ listIdCookie }) {
                                     >
                                         {task.name}
                                     </button>
-                                    <div className="absolute right-3 top-0 bottom-0 flex items-center">
-                                        <button onClick={() => handleUpdateTaskClick(task._id)}
-                                            className="bg-white w-8 h-8 flex items-center justify-center border border-black mr-2"
+                                    <div className="absolute right-3 top-0 bottom-0 flex items-center opacity-0 group-hover:opacity-100">
+                                        <button
+                                            onClick={() => handleUpdateTaskClick(task._id)}
+                                            className="bg-orange-400 w-8 h-8 flex items-center justify-center border border-black mr-2"
                                         >
                                             <AiOutlineEdit size={25} />
                                         </button>
@@ -166,7 +167,6 @@ function Tasks({ listIdCookie }) {
                                 </li>
                             ))}
                         </ul>
-
                     </div>
                 )
             }
