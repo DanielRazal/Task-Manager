@@ -5,7 +5,6 @@ import Lists from './Lists';
 
 function TodoList() {
     const navigate = useNavigate();
-    const listIdCookie = Cookies.get('ListId');
     const [userId, setUserId] = useState(null);
 
     useEffect(() => {
