@@ -15,12 +15,6 @@ function Lists() {
   const [selectedListId, setSelectedListId] = useState(null);
   const listIdCookie = Cookies.get('ListId');
 
-
-  useEffect(() => {
-    initializeFormDataAndFetchLists();
-    removeListIdCookieBeforeUnload();
-  }, []);
-
   const initializeFormDataAndFetchLists = () => {
     const userCookie = Cookies.get('User');
     const userObj = JSON.parse(userCookie);
@@ -35,9 +29,7 @@ function Lists() {
       .catch((error) => {
         console.error('Error fetching user lists:', error);
       });
-
   };
-
 
   const removeListIdCookieBeforeUnload = (() => {
     const removeCookie = () => {
@@ -50,6 +42,12 @@ function Lists() {
       window.removeEventListener('beforeunload', removeCookie);
     };
   })();
+
+  useEffect(() => {
+    initializeFormDataAndFetchLists();
+    removeListIdCookieBeforeUnload();
+  }, [removeListIdCookieBeforeUnload]);
+
 
 
   const handleNewListClick = () => {
