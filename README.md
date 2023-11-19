@@ -22,6 +22,6 @@ To run the **"Task-Manager"** project, execute the following commands:
 
 1. In the server directory, locate the `.env` file.
 
-3. Open the `.env` file and replace the placeholder for the MONGODB_URI with the appropriate URL for your MongoDB server.\
+2. Open the `.env` file and replace the placeholder for the MONGODB_URI with the appropriate URL for your MongoDB server.\
 It should look something like this: **DATABASE_URL=mongodb://127.0.0.1:27017/TaskManager**
 
